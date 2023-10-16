@@ -1,0 +1,8 @@
+.mobile-menu {
+  max-height: 0px;
+  overflow: hidden;
+  transition: .5s ease;
+  &.active{
+    max-height: 100vh;
+  }
+}

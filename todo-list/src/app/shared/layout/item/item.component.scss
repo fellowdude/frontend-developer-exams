@@ -1,0 +1,11 @@
+
+#description-container{
+  max-height: 0px;
+  transition: .5s ease;
+  overflow: hidden;
+  &.show {
+    max-height: 999px;
+  }
+}
+
+

@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-end align-items-center vw-100 vh-100 bg-dark">
+  <div id="image-bg" class="col-md-9 w-100 h-100 position-relative"></div>
+  <div class="portal-container d-flex justify-content-center align-items-center flex-column p-lg-2 p-4 p-md-3 col-10 col-md-6 col-lg-6 col-xl-3 bg-light position-absolute position-lg-static rounded">
+    <div class="d-flex justify-content-center align-items-center flex-column mb-lg-3 mb-1 text-center">
+      <img class="d-inline-block align-text-top img-fluid" alt="" width="108" height="120" src="assets/images/logo.png">
+      <h3 class="my-2 my-md-2">Yale School of Art</h3>
+    </div>
+    <form [formGroup]="registrationForm" (submit)="register()">
+      <div class="form-group mb-2 mb-md-3">
+        <label><b>Username</b></label>
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">O</span>
+          <input class="form-control" formControlName="username">
+        </div>
+      </div>
+      <div class="form-group mb-2 mb-md-3">
+        <label><b>Password</b></label>
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon2">O</span>
+          <input type="password" class="form-control" formControlName="password">
+        </div>
+      </div>
+      <div class="form-group mb-2 mb-md-3">
+        <label><b>Confirm Password</b></label>
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon2">O</span>
+          <input type="password" class="form-control" formControlName="passwordConfirm">
+        </div>
+      </div>
+      <div class="form-group text-center mb-2 mb-md-3">
+        <button class="btn btn-primary px-3 px-4" [disabled]="registrationForm.invalid">Register</button>
+      </div>
+      <div class="form-group text-center">
+        <a class="text-dark text-decoration-none" routerLink="/login">Got an account?</a>
+      </div>
+    </form>
+  </div>
+</div>
+<app-toast-message aria-live="polite" aria-atomic="true"></app-toast-message>

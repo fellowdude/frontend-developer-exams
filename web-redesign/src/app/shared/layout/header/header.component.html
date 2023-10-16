@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <div class="container-fluid col-md-11 col-12 d-flex justify-content-between aling-items-center">
+    <a class="navbar-brand" routerLink="/">
+      <img class="d-inline-block align-text-top img-fluid" alt="" width="27" height="30" src="assets/images/logo.png">
+      Yale School of Art
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#aboutus">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#apply">Apply Now</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#events">Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#community">Community</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/login']" *ngIf="!loggued">Login</a>
+          <a class="nav-link cursor-pointer" (click)="logout()" *ngIf="loggued">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="mobile-menu bg-light mx-2" [ngClass]="{'active': activeMenu}">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#aboutus">About Us</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#apply">Apply Now</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#events">Events</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#community">Community</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/login']" *ngIf="!loggued">Login</a>
+        <a class="nav-link cursor-pointer" (click)="logout()" *ngIf="loggued">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>

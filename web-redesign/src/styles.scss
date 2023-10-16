@@ -1,0 +1,158 @@
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+:root {
+  --login-bg: 'assets/images/login-bg.jpeg';
+}
+
+* {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+html {
+  scroll-padding-top: 4rem;
+}
+
+.portal-container{
+  height: 100%;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+#main {
+  min-height: calc(100vh - 72px);
+}
+
+#image-bg{
+  background: url(assets/images/login-bg.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
+  &::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+  }
+}
+
+#home-banner{
+  background: url(assets/images/home-banner-bg.jpg) no-repeat;
+  background-size: cover;
+  background-position: top;
+  background-attachment: fixed;
+  height: calc(100vh/2);
+  &::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 0;
+  }
+}
+
+.section-title{
+  width: fit-content;
+  &::after{
+    content: '';
+    width: 50px;
+    height: 5px;
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    background: var(--bs-primary);
+  }
+
+  &.center-title{
+    &::after{
+      width: 75px;
+      left: 0%;
+    }
+  }
+}
+
+.testimonial-img{
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+}
+
+.bg-green{
+  background: var(--bs-green);
+}
+
+.bg-orange{
+  background: var(--bs-orange);
+}
+
+.bg-indigo{
+  background: var(--bs-indigo);
+}
+
+.community {
+  background-size: 100%;
+  background-position: center;
+  position: relative;
+  height: 300px;
+  &::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 0;
+  }
+}
+
+#community-1 {
+  background: url(assets/images/community-bg-1.png) no-repeat;
+  height: 600px;
+}
+
+#community-2 {
+  background: url(assets/images/community-bg-2.jpg) no-repeat;
+}
+
+#community-3 {
+  background: url(assets/images/community-bg-3.jpg) no-repeat;
+}
+
+#community-4 {
+  background: url(assets/images/community-bg-4.jpg) no-repeat;
+}
+
+
+@media (max-width: 992px) {
+  .portal-container{
+    height: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #home-banner{
+    background-position: right;
+  }
+
+  #community-1 {
+    height: 300px;
+  }
+}
+
+@media (max-width: 1920px) {
+  #home-banner{
+    background-position: center;
+  }
+
+  #community-1 {
+    height: 300px;
+  }
+}
