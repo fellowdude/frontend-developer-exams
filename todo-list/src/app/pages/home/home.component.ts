@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { EAction } from 'src/app/shared/enums/action.enum';
 import { EFilterType } from 'src/app/shared/enums/filter-type.enum';
 import { IItem } from 'src/app/shared/interfaces/item.interface';
@@ -11,14 +11,12 @@ import { TodoService } from 'src/app/shared/services/api/todo/todo.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit{
-
+  tempItem: IItem | null = null;
+  requestDone: boolean = false;
   editingItem: boolean = false;
+  deletedItem: boolean = false;
   itemList: Array<IItem> = [];
-  itemForm: FormGroup = new FormGroup({
-    title: new FormControl(null, [Validators.required]),
-    description: new FormControl(null),
-    completed: new FormControl(false),
-  })
+  itemForm!: FormGroup;
   actions: typeof EAction = EAction;
   filterType: typeof EFilterType = EFilterType;
   currentFilterType: EFilterType = this.filterType.all;
@@ -27,13 +25,17 @@ export class HomeComponent implements OnInit{
   constructor(private todoService: TodoService){}
 
   ngOnInit(): void {
+    this.itemForm = new FormGroup({
+      title: new FormControl(null, [Validators.required, this.validateDuplication().bind(this), this.validateOnlySpacesEmpty(), Validators.pattern(/^[A-Za-z\s]*$/)]),
+      description: new FormControl(null),
+      completed: new FormControl(false),
+    })
     this.listItems();
   }
 
   listItems(): void {
     this.todoService.getTodos(this.searchObj).subscribe({
       next: (response) => {
-        console.log(response);
         this.itemList = response;
       }
     })
@@ -59,36 +61,42 @@ export class HomeComponent implements OnInit{
   }
 
   sendForm(): void {
-    if(this.editingItem){
-      this.updateItem(this.itemForm.value);
-    } else {
-      console.log(this.itemForm.value);
-      this.todoService.addTodo(this.itemForm.value).subscribe({
-        next: (response) => {
-          this.itemForm.reset();
-          this.itemForm.get('completed')?.setValue(false);
-          this.listItems();
-        }
-      })
+    if(this.itemForm.valid){
+      if(this.editingItem){
+        this.updateItem(this.itemForm.value);
+      } else {
+        this.todoService.addTodo(this.itemForm.value).subscribe({
+          next: (response) => {
+            this.itemForm.reset();
+            this.itemForm.get('completed')?.setValue(false);
+            this.listItems();
+            this.showTimedMessage();
+          }
+        })
+      }
     }
   }
 
   updateItem(item: IItem): void {
-    console.log(item);
     this.todoService.updateTodo(item).subscribe({
       next: (response) => {
         this.itemForm.removeControl('id');
         this.itemForm.reset();
         this.itemForm.get('completed')?.setValue(false);
         this.listItems();
+        if(this.editingItem)
+          this.showTimedMessage();
       }
     })
   }
 
   deleteItem(itemId: number): void {
+
     this.todoService.deleteTodo(itemId).subscribe({
       next: (response) => {
         this.listItems();
+        this.deletedItem = true;
+        this.showTimedMessage();
       }
     })
   }
@@ -101,6 +109,7 @@ export class HomeComponent implements OnInit{
       }
       case this.actions.edit: {
         this.editingItem = true;
+        this.tempItem = {... event.item};
         this.itemForm.addControl('id', new FormControl(null, [Validators.required]));
         this.itemForm.patchValue(event.item);
         break;
@@ -112,8 +121,40 @@ export class HomeComponent implements OnInit{
     }
   }
 
-  cancelEdit(): void {
+  cancel(): void {
     this.editingItem = false;
+    this.tempItem = null;
     this.itemForm.reset();
+    this.itemForm.removeControl('id');
+  }
+
+  validateDuplication(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let findItem = this.itemList.find((elem)=>{
+        if(this.editingItem){
+          return elem?.title?.toLowerCase().trim() === control?.value?.toLowerCase().trim() && this.tempItem?.title.toLowerCase().trim() !==  control?.value?.toLowerCase().trim();
+        }
+        else {
+          return elem?.title?.toLowerCase().trim() === control?.value?.toLowerCase().trim();
+        }
+      })
+      return (findItem? {'titleDuplicated': true}: null)
+    }
+  }
+
+  validateOnlySpacesEmpty(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      console.log(control?.value?.trim() === '')
+      return (control?.value?.trim() === ''? {'onlySpaces': true}: null)
+    }
+  }
+
+  showTimedMessage(): void {
+    this.requestDone = true;
+    setTimeout(()=>{
+      this.requestDone = false;
+      this.deletedItem = false;
+      this.editingItem = false;
+    }, 2000)
   }
 }

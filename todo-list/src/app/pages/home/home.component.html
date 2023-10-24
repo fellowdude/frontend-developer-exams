@@ -1,7 +1,7 @@
-<section class="container">
-  <div>
+<section class="container mt-xl-5 mt-3">
+  <div class="col-12 col-xl-6 mx-auto">
     <div>
-      <p class="h4">
+      <p class="h3">
         <ng-container *ngIf="!editingItem">Crear TODO</ng-container>
         <ng-container *ngIf="editingItem">Editar TODO</ng-container>
       </p>
@@ -9,26 +9,37 @@
     <form [formGroup]="itemForm" (submit)="sendForm()">
       <div class="form-group">
         <label>Title</label>
-        <input class="form-control" formControlName="title">
+        <input class="form-control" formControlName="title" [ngClass]="{'error-border': itemForm.controls['title'].invalid && itemForm.controls['title'].dirty}">
+        <span *ngIf="itemForm.controls['title'].invalid && itemForm.controls['title'].dirty && (itemForm?.get('title')?.getError('required') || itemForm?.get('title')?.getError('onlySpaces'))" class="text-danger">Title is required</span>
+        <span *ngIf="itemForm.controls['title'].invalid && itemForm.controls['title'].dirty && itemForm?.get('title')?.getError('titleDuplicated')" class="text-danger">Title is duplicated</span>
+        <span *ngIf="itemForm.controls['title'].invalid && itemForm.controls['title'].dirty && itemForm?.get('title')?.getError('pattern')" class="text-danger">Only letters are allowed</span>
       </div>
       <div class="form-group mt-2">
         <label>Description</label>
         <textarea class="form-control" formControlName="description"></textarea>
       </div>
       <div class="form-group mt-2">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" [disabled]="itemForm.invalid">
           <ng-container *ngIf="!editingItem">Crear</ng-container>
           <ng-container *ngIf="editingItem">Editar</ng-container>
         </button>
-        <button type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">
+        <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">
           Cancelar
         </button>
       </div>
+      <div class="form-group mt-2">
+        <span class="bg-success text-light border-1 rounded-1 px-3 py-1" *ngIf="requestDone">Todo has been
+          <ng-container *ngIf="!editingItem && !deletedItem">created</ng-container>
+          <ng-container *ngIf="editingItem && !deletedItem">edited</ng-container>
+          <ng-container *ngIf="deletedItem && !editingItem">deleted</ng-container>
+        </span>
+        <span class="px-3 py-1" *ngIf="!requestDone">&nbsp;</span>
+      </div>
     </form>
   </div>
-  <div class="d-flex w-100 justify-content-center align-items-center flex-column py-2">
+  <div class="d-flex justify-content-center align-items-center flex-column py-2 col-12 col-xl-8 mx-auto">
     <div>
-      <p class="h4">TODOs</p>
+      <p class="h3">TODOs</p>
     </div>
     <div class="btn-group" role="group" aria-label="Basic example">
       <button type="button" (click)="changeFilter(filterType.all)" class="btn btn-outline-primary" [ngClass]="{'btn-primary': currentFilterType === filterType.all, 'btn-outline-primary': currentFilterType !== filterType.all}" >All</button>
